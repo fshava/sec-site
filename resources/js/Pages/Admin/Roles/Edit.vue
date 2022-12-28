@@ -6,6 +6,7 @@ import { Head, usePage, Link } from '@inertiajs/inertia-vue3';
 const permissions = usePage().props.value.permissions;
 const rolePermissions = usePage().props.value.rolePermissions;
 const role = usePage().props.value.role;
+const count = usePage().props.value.count;
 </script>
 
 <template>
@@ -24,6 +25,7 @@ const role = usePage().props.value.role;
                     :permissions="permissions"
                     :rolePermissions="rolePermissions"
                     :role="role"    
+                    :count="count"    
                     class="max-w-xl"
                     />
                 </div>

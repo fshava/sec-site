@@ -59,8 +59,9 @@ class RolesController extends Controller
     public function show(Role $role)
     {
         $role = $role;
+        $count = $role->permissions->count();
         $rolePermissions = $role->permissions;
-        return Inertia::render('Admin/Roles/Show', ['rolePermissions'=>$rolePermissions, 'role'=>$role]);
+        return Inertia::render('Admin/Roles/Show', ['rolePermissions'=>$rolePermissions, 'role'=>$role, 'count'=>$count]);
     }
 
     /**
@@ -73,6 +74,7 @@ class RolesController extends Controller
     {
         $role = $role;
         $rolePermissions = $role->permissions->pluck('name')->toArray();
+        $count = $role->permissions->count();
         $permissions = Permission::get();
         // dd(['role'=>$role, 
         // 'rolePermissions'=>$rolePermissions, 
@@ -80,7 +82,8 @@ class RolesController extends Controller
         return Inertia::render('Admin/Roles/Edit', [
             'role'=>$role, 
             'rolePermissions'=>$rolePermissions, 
-            'permissions'=>$permissions
+            'permissions'=>$permissions,
+            'count'=>$count
         ]);
     }
 

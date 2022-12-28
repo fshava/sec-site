@@ -51,6 +51,16 @@ const roles = usePage().props.value.roles;
                                                     {{role.name}}
                                                 </td>
                                                 <td
+                                                    class="text-sm text-green-900 font-light px-6 py-4 whitespace-nowrap">
+                                                    <Link
+                                                        :href="route('roles.show', role)"
+                                                        as="button"
+                                                        class="underline text-sm text-green-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                    >
+                                                        View
+                                                    </Link>
+                                                </td>
+                                                <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                                     <Link
                                                         :href="route('roles.edit', role)"

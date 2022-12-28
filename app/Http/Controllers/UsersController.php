@@ -19,8 +19,9 @@ class UsersController extends Controller
      */
     public function index() 
     {
-        $users = User::latest()->paginate(10);
-
+        $users = User::with('roles')->get();
+        // $users = User::all();
+        // dd($users);
         return Inertia::render('Admin/Users/Index', ['users'=>$users]);
     }
 
@@ -62,7 +63,9 @@ class UsersController extends Controller
      */
     public function show(User $user) 
     {
-        return Inertia::render('Admin/Users/Show', ['user'=>$user]);
+        $roles = $user->getRoleNames();
+        $count = $roles->count();
+        return Inertia::render('Admin/Users/Show', ['user'=>$user, 'roles'=>$roles, 'count'=>$count]);
     }
 
     /**
@@ -76,7 +79,7 @@ class UsersController extends Controller
     {
         return Inertia::render('Admin/Users/Edit', [  
         'user' => $user,
-        'userRole' => $user->roles->pluck('name')->toArray(),
+        'userRoles' => $user->roles->pluck('name')->toArray(),
         'roles' => Role::latest()->get()
         ]);
     }
@@ -89,10 +92,10 @@ class UsersController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function update(User $user, UpdateUserRequest $request) 
+    public function update(User $user, Request $request) 
     {
-        $user->update($request->validated());
-
+        // $user->update($request->validated());
+        // dd($request->get('role'));
         $user->syncRoles($request->get('role'));
 
         return Redirect::route('users.index');

@@ -10,14 +10,14 @@ import { ref, onMounted } from 'vue';
 const el = ref();
 
 onMounted(() => {
-    for (let index = 0; index < props.permissions.length; index++) {
-        const element = props.permissions[index];
+    for (let index = 0; index < props.roles.length; index++) {
+        const element = props.roles[index];
         // find in Permissions array
-        for (let index = 0; index < props.rolePermissions.length; index++) {
+        for (let index = 0; index < props.userRoles.length; index++) {
             // if a role is found in permissions, populate
-            if (props.rolePermissions[index] == element.name) {
+            if (props.userRoles[index] == element.name) {
                 // pre-populate permission array
-                permission.push(element.name);
+                role.push(element.name);
                 // locate and modify checkbox to "checked" before rendering
                 document.getElementById(element.name).checked = true;
                 console.log(element.name);
@@ -29,20 +29,19 @@ onMounted(() => {
 });
 
 const props = defineProps({
-    count: Object,
-    permissions: Object,
-    rolePermissions: Object,
-    role: Object,
+    user: Object,
+    userRoles: Object,
+    roles: Object,
 });
-var permission = [];
+var role = [];
 const form = useForm({
-    name: props.role.name,
-    permission: permission,
+    user: props.user,
+    role: role,
 });
-const permissionExist = (perm) => {
-    for (let index = 0; index < permission.length; index++) {
-        if (permission[index] == perm) {
-            permission.splice(index, 1);
+const roleExist = (rol) => {
+    for (let index = 0; index < role.length; index++) {
+        if (role[index] == rol) {
+            role.splice(index, 1);
             return true;
         }
 
@@ -51,9 +50,9 @@ const permissionExist = (perm) => {
 }
 
 
-const addPermission = (perm) => {
-    if (!permissionExist(perm)) {
-        permission.push(perm);
+const addRole = (rol) => {
+    if (!roleExist(rol)) {
+        role.push(rol);
     }
 }
 </script>
@@ -61,23 +60,15 @@ const addPermission = (perm) => {
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900">Edit Role</h2>
+            <h2 class="text-lg font-medium text-gray-900">Edit User</h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                This role currently have <span style="font-weight: bold; color: crimson;">{{ props.count }}</span> permissions. Role should be a particular position of a user in an organisation or name of set of duties. A role must be assigned at least one permission.
+                {{ props.user.name }} currently have <span style="font-weight: bold; color: crimson;">20</span> roles.
             </p>
         </header>
 
-        <form @submit.prevent="form.patch(route('roles.update', props.role))" class="mt-6 space-y-6">
-            <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus
-                    autocomplete="name" />
-
-                <!-- <InputError class="mt-2" :message="form.errors.name" /> -->
-            </div>
-            <!-- Display permissions for selection -->
+        <form @submit.prevent="form.patch(route('users.update', props.user))" class="mt-6 space-y-6">
+            <!-- Display roles for selection -->
             <!-- table -->
             <div class="flex flex-col">
                 <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -86,30 +77,23 @@ const addPermission = (perm) => {
                             <table class="min-w-full text-center">
                                 <thead class="border-b bg-gray-800">
                                     <tr>
-                                        <th scope="col" width="1%"><input type="checkbox" name="all_permission"></th>
+                                        <th scope="col" width="1%"><input type="checkbox" name="all_role"></th>
                                         <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                                            Name
-                                        </th>
-                                        <th scope="col" colspan="3" width="1%"
-                                            class="text-sm font-medium text-white px-6 py-4">
-                                            Guard
+                                            Role
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="permission in permissions" class="bg-white border-b">
+                                    <tr v-for="role in props.roles" class="bg-white border-b">
                                         <td>
-                                            <Checkbox :id="permission.name" ref="el" onload="populate(permission.name)"
-                                                @click="addPermission(permission.name)" type="checkbox"
-                                                :value="permissions.name" :name="permission[permissions.name]" />
+                                            <Checkbox :id="role.name" ref="el"
+                                                @click="addRole(role.name)" type="checkbox"
+                                                :value="role.name" :name="role[role.name]" />
                                             <!-- <input type="checkbox" v-model="permission[permission.name]"
                                                 :value="permission.name"> -->
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {{ permission.name }}</td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            {{ permission.guard_name }}
-                                        </td>
+                                            {{ role.name }}</td>
                                     </tr>
                                 </tbody>
                             </table>
